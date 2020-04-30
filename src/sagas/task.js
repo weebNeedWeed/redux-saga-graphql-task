@@ -27,7 +27,7 @@ function* fetchListTaskRequest() {
   try {
     const response = yield call(taskApiCall.fetchListTaskFromApi);
     const filterKeyword = yield select((state) => state.task.filterKeyword);
-    const filteredTask = response.data.filter((task) =>
+    const filteredTask = response.filter((task) =>
       task.title.includes(filterKeyword),
     );
 

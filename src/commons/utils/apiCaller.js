@@ -37,10 +37,16 @@ class callApi {
 
     let url = `${this.url}/${name}`;
 
-    endpoints.getAll = ({ query } = {}) => axios.get(url, query);
-    endpoints.post = ({ query } = {}) => axios.post(url, query);
-    endpoints.update = ({ query } = {}) => axios.put(url, query);
-    endpoints.delete = ({ query } = {}) => axios.delete(url, query);
+    endpoints.query = ({ query } = {}) =>
+      axios.post(
+        url,
+        {
+          query,
+        },
+        {
+          headers: { "content-type": "application/json" },
+        },
+      );
 
     return endpoints;
   }

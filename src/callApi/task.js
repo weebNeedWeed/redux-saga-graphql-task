@@ -2,24 +2,43 @@ import { API_ENDPOINT } from "./../constants/index";
 
 import apiCaller from "./../commons/utils/apiCaller";
 
-export const fetchListTaskFromApi = () => {
+export const fetchListTaskFromApi = async () => {
+  const queryString = "{tasks {id description title status}}";
+
   const apiEntity = {
-    name: "tasks",
+    name: "",
     url: API_ENDPOINT,
   };
   const taskFetcher = new apiCaller(apiEntity);
   taskFetcher.createEntity();
-  return taskFetcher.endpoints[apiEntity.name].getAll();
+
+  const req = await taskFetcher.endpoints[apiEntity.name].query({
+    query: queryString,
+  });
+
+  const res = req.data.data.tasks;
+  return res;
 };
 
 export const addNewTask = (data) => {
+  const descQuery = data.description ?? "";
+  const queryString = `
+    mutation {
+      addTask(title: "${data.title}",description: "${descQuery}",status: ${data.status}){
+        id,
+      }
+    }
+  `;
+
   const apiEntity = {
-    name: "tasks",
+    name: "",
     url: API_ENDPOINT,
   };
   const taskPoster = new apiCaller(apiEntity);
   taskPoster.createEntity();
-  taskPoster.endpoints[apiEntity.name].post({ query: data });
+  taskPoster.endpoints[apiEntity.name].query({
+    query: queryString,
+  });
   return;
 };
 

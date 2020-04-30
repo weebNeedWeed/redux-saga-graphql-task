@@ -43,23 +43,44 @@ export const addNewTask = (data) => {
 };
 
 export const updateTask = (data) => {
+  const descQuery = data.description ?? "";
+  const queryString = `
+    mutation {
+      updateTask(id: "${data.id}",title: "${data.title}",description: "${descQuery}",status: ${data.status}){
+        id,
+      }
+    }
+  `;
+
   const apiEntity = {
-    name: "tasks/" + data.id,
+    name: "",
     url: API_ENDPOINT,
   };
   const taskPoster = new apiCaller(apiEntity);
   taskPoster.createEntity();
-  taskPoster.endpoints[apiEntity.name].update({ query: data });
+  taskPoster.endpoints[apiEntity.name].query({
+    query: queryString,
+  });
   return;
 };
 
-export const deleteTask = (data) => {
+export const deleteTask = ({ id }) => {
+  const queryString = `
+    mutation {
+      deleteTask(id: "${id}"){
+        id
+      }
+    }
+  `;
+
   const apiEntity = {
-    name: "tasks/" + data.id,
+    name: "",
     url: API_ENDPOINT,
   };
   const taskPoster = new apiCaller(apiEntity);
   taskPoster.createEntity();
-  taskPoster.endpoints[apiEntity.name].delete();
+  taskPoster.endpoints[apiEntity.name].query({
+    query: queryString,
+  });
   return;
 };
